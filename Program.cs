@@ -366,7 +366,7 @@ class SortingBenchmark
                 maxValue = array[i];
         }
 
-        int BusketCount = (int)(maxValue - minValue) / 5; // Зміна кількості кошиків
+        int BusketCount = (int)(maxValue - minValue) / 9; // Зміна кількості кошиків
         List<float>[] Buskets = new List<float>[BusketCount];
 
         for (int i = 0; i < Buskets.Length; i++)
@@ -376,7 +376,7 @@ class SortingBenchmark
 
         for (int i = 0; i < array.Length; i++)
         {
-            int BusketIndex = (int)((array[i] - minValue) / 6); // Зміна індексу кошика
+            int BusketIndex = (int)((array[i] - minValue) / 10); // Зміна індексу кошика
             Buskets[BusketIndex].Add(array[i]);
         }
 
