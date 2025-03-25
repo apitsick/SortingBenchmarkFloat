@@ -21,17 +21,17 @@ class SortingBenchmark
         Console.WriteLine("Порівняння часу сортування (в мілісекундах) для випадкових масивів з великого інтервалу\n");
         CompareSortingTimes(sizes, methods, 1, 1000000);
 
-        //// Порівняння випадкових масивів з малого інтервалу
-        //Console.WriteLine("Порівняння часу сортування (в мілісекундах) для випадкових масивів з малого інтервалу\n");
-        //CompareSortingTimes(sizes, methods, 1, 10);
+        // Порівняння випадкових масивів з малого інтервалу
+        Console.WriteLine("Порівняння часу сортування (в мілісекундах) для випадкових масивів з малого інтервалу\n");
+        CompareSortingTimes(sizes, methods, 1, 10);
 
-        ////Порівняння масивів, відсортованих за спаданням, з великого інтервалу
-        //Console.WriteLine("Порівняння часу сортування (в мілісекундах) для відсортованих за спаданням масивів з великого інтервалу\n");
-        //CompareSortingTimes(sizes, methods, 1, 1000000, true);
+        //Порівняння масивів, відсортованих за спаданням, з великого інтервалу
+        Console.WriteLine("Порівняння часу сортування (в мілісекундах) для відсортованих за спаданням масивів з великого інтервалу\n");
+        CompareSortingTimes(sizes, methods, 1, 1000000, true);
 
-        //// Порівняння масивів, відсортованих за спаданням, з малого інтервалу
-        //Console.WriteLine("Порівняння часу сортування (в мілісекундах) для відсортованих за спаданням масивів з малого інтервалу\n");
-        //CompareSortingTimes(sizes, methods, 1, 10, true);
+        // Порівняння масивів, відсортованих за спаданням, з малого інтервалу
+        Console.WriteLine("Порівняння часу сортування (в мілісекундах) для відсортованих за спаданням масивів з малого інтервалу\n");
+        CompareSortingTimes(sizes, methods, 1, 10, true);
     }
 
     // Функція порівняння часу сортування для різних методів
@@ -396,212 +396,70 @@ class SortingBenchmark
         Array.Sort(array);
     }
 
-    // Метод Binary Tree Sort
-    static void BinaryTreeSort(float[] array)
+    // Метод Binary Tree Sort    
+    static void BinaryTreeSort(int[] array)
     {
         if (array.Length == 0)
             return;
 
-        RedBlackTree tree = new RedBlackTree();
+        TreeNode root = new TreeNode(array[0]);
 
-        for (int i = 0; i < array.Length; i++)
+        for (int i = 1; i < array.Length; i++)
         {
-            tree.Insert(array[i]);
+            root.Insert(array[i]);
         }
 
         int index = 0;
-        foreach (var value in tree.InOrderTraversal())
+        InOrderTraversal(root, array, ref index);
+    }
+
+    // Функція обхід дерева в порядку (In-Order Traversal)
+    static void InOrderTraversal(TreeNode node, int[] array, ref int index)
+    {
+        if (node != null)
         {
-            array[index++] = value;
+            InOrderTraversal(node.Left, array, ref index);
+            array[index++] = node.Value;
+            InOrderTraversal(node.Right, array, ref index);
         }
     }
 
-    // Клас вузла червоно-чорного дерева
-    class RedBlackTreeNode
+    // Клас вузла дерева
+    class TreeNode
     {
-        public float Value;
-        public RedBlackTreeNode Left;
-        public RedBlackTreeNode Right;
-        public RedBlackTreeNode Parent;
-        public bool IsRed;
+        public int Value;
+        public TreeNode Left;
+        public TreeNode Right;
 
-        public RedBlackTreeNode(float value)
+        public TreeNode(int value)
         {
             Value = value;
-            IsRed = true; // Новий вузол завжди червоний
-        }
-    }
-
-    // Клас червоно-чорного дерева
-    class RedBlackTree
-    {
-        private RedBlackTreeNode root;
-
-        public void Insert(float value)
-        {
-            RedBlackTreeNode newNode = new RedBlackTreeNode(value);
-            if (root == null)
-            {
-                root = newNode;
-                root.IsRed = false; // Кореневий вузол завжди чорний
-            }
-            else
-            {
-                Insert(root, newNode);
-                FixInsert(newNode);
-            }
+            Left = null;
+            Right = null;
         }
 
-        private void Insert(RedBlackTreeNode current, RedBlackTreeNode newNode)
+        public void Insert(int value)
         {
-            if (newNode.Value < current.Value)
+            if (value <= Value)
             {
-                if (current.Left == null)
+                if (Left == null)
                 {
-                    current.Left = newNode;
-                    newNode.Parent = current;
+                    Left = new TreeNode(value);
                 }
                 else
                 {
-                    Insert(current.Left, newNode);
+                    Left.Insert(value);
                 }
             }
             else
             {
-                if (current.Right == null)
+                if (Right == null)
                 {
-                    current.Right = newNode;
-                    newNode.Parent = current;
+                    Right = new TreeNode(value);
                 }
                 else
                 {
-                    Insert(current.Right, newNode);
-                }
-            }
-        }
-
-        private void FixInsert(RedBlackTreeNode node)
-        {
-            while (node != root && node.Parent.IsRed)
-            {
-                if (node.Parent == node.Parent.Parent.Left)
-                {
-                    RedBlackTreeNode uncle = node.Parent.Parent.Right;
-                    if (uncle != null && uncle.IsRed)
-                    {
-                        node.Parent.IsRed = false;
-                        uncle.IsRed = false;
-                        node.Parent.Parent.IsRed = true;
-                        node = node.Parent.Parent;
-                    }
-                    else
-                    {
-                        if (node == node.Parent.Right)
-                        {
-                            node = node.Parent;
-                            RotateLeft(node);
-                        }
-                        node.Parent.IsRed = false;
-                        node.Parent.Parent.IsRed = true;
-                        RotateRight(node.Parent.Parent);
-                    }
-                }
-                else
-                {
-                    RedBlackTreeNode uncle = node.Parent.Parent.Left;
-                    if (uncle != null && uncle.IsRed)
-                    {
-                        node.Parent.IsRed = false;
-                        uncle.IsRed = false;
-                        node.Parent.Parent.IsRed = true;
-                        node = node.Parent.Parent;
-                    }
-                    else
-                    {
-                        if (node == node.Parent.Left)
-                        {
-                            node = node.Parent;
-                            RotateRight(node);
-                        }
-                        node.Parent.IsRed = false;
-                        node.Parent.Parent.IsRed = true;
-                        RotateLeft(node.Parent.Parent);
-                    }
-                }
-            }
-            root.IsRed = false;
-        }
-
-        private void RotateLeft(RedBlackTreeNode node)
-        {
-            RedBlackTreeNode right = node.Right;
-            node.Right = right.Left;
-            if (right.Left != null)
-            {
-                right.Left.Parent = node;
-            }
-            right.Parent = node.Parent;
-            if (node.Parent == null)
-            {
-                root = right;
-            }
-            else if (node == node.Parent.Left)
-            {
-                node.Parent.Left = right;
-            }
-            else
-            {
-                node.Parent.Right = right;
-            }
-            right.Left = node;
-            node.Parent = right;
-        }
-
-        private void RotateRight(RedBlackTreeNode node)
-        {
-            RedBlackTreeNode left = node.Left;
-            node.Left = left.Right;
-            if (left.Right != null)
-            {
-                left.Right.Parent = node;
-            }
-            left.Parent = node.Parent;
-            if (node.Parent == null)
-            {
-                root = left;
-            }
-            else if (node.Parent.Right == node)
-            {
-                node.Parent.Right = left;
-            }
-            else
-            {
-                node.Parent.Left = left;
-            }
-            left.Right = node;
-            node.Parent = left;
-        }
-
-        public IEnumerable<float> InOrderTraversal()
-        {
-            if (root == null)
-                yield break;
-
-            Stack<RedBlackTreeNode> stack = new Stack<RedBlackTreeNode>();
-            RedBlackTreeNode current = root;
-
-            while (stack.Count > 0 || current != null)
-            {
-                if (current != null)
-                {
-                    stack.Push(current);
-                    current = current.Left;
-                }
-                else
-                {
-                    current = stack.Pop();
-                    yield return current.Value;
-                    current = current.Right;
+                    Right.Insert(value);
                 }
             }
         }
