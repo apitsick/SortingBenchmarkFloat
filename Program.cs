@@ -15,7 +15,7 @@ class SortingBenchmark
         int[] sizes = { 10, 1000, 10000, 1000000, 100000000 };
 
         // Методи сортування для порівняння
-        string[] methods = { "Insertion Sort", "Bubble Sort", "Quick Sort", "Merge Sort", "Count Sort", "Radix Sort", "Bucket Sort", "Timsort", "Binary Tree Sort" };
+        string[] methods = { "Insertion Sort", "Bubble Sort", "Quick Sort", "Merge Sort", "Count Sort", "Radix Sort", "Busket Sort", "Timsort", "Binary Tree Sort" };
 
         // Порівняння випадкових масивів з великого інтервалу
         Console.WriteLine("Порівняння часу сортування (в мілісекундах) для випадкових масивів з великого інтервалу\n");
@@ -132,8 +132,8 @@ class SortingBenchmark
             case "Radix Sort":
                 RadixSort(array);
                 break;
-            case "Bucket Sort":
-                BucketSort(array);
+            case "Busket Sort":
+                BusketSort(array);
                 break;
             case "Timsort":
                 Timsort(array);
@@ -349,8 +349,8 @@ class SortingBenchmark
         }
     }
 
-    // Метод Bucket Sort
-    static void BucketSort(float[] array)
+    // Метод Busket Sort
+    static void BusketSort(float[] array)
     {
         if (array.Length == 0)
             return;
@@ -366,24 +366,24 @@ class SortingBenchmark
                 maxValue = array[i];
         }
 
-        int bucketCount = (int)(maxValue - minValue) / 5; // Зміна кількості кошиків
-        List<float>[] buckets = new List<float>[bucketCount];
+        int BusketCount = (int)(maxValue - minValue) / 5; // Зміна кількості кошиків
+        List<float>[] Buskets = new List<float>[BusketCount];
 
-        for (int i = 0; i < buckets.Length; i++)
+        for (int i = 0; i < Buskets.Length; i++)
         {
-            buckets[i] = new List<float>();
+            Buskets[i] = new List<float>();
         }
 
         for (int i = 0; i < array.Length; i++)
         {
-            int bucketIndex = (int)((array[i] - minValue) / 6); // Зміна індексу кошика
-            buckets[bucketIndex].Add(array[i]);
+            int BusketIndex = (int)((array[i] - minValue) / 6); // Зміна індексу кошика
+            Buskets[BusketIndex].Add(array[i]);
         }
 
         int k = 0;
-        for (int i = 0; i < buckets.Length; i++)
+        for (int i = 0; i < Buskets.Length; i++)
         {
-            foreach (float value in buckets[i])
+            foreach (float value in Buskets[i])
             {
                 array[k++] = value;
             }
